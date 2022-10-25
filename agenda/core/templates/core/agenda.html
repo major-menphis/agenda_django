@@ -1,0 +1,37 @@
+
+{% extends "core/model-page.html" %}
+
+{% block content %}
+    <h2>Agendamentos</h2>
+    <a href="evento/">
+        <button type="button">Novo evento</button>
+    </a>
+    <form action="{% url 'lista_eventos' %}" method="POST">
+        <label>Filtrar tarefas:</label>
+        {% csrf_token %}
+        <select name="filtro" id="filtro">
+            {% for op in opcao %}
+                <option value="{{ op }}">{{ op }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Filtrar">
+    </form>
+    {% if visualizacao == None %}
+    <h3>Você esta visualizando todos os eventos</h3>
+    {% else %}
+    <h3>Você esta visualizando {{ visualizacao }}</h3>
+    {% endif %}
+    <ul>
+    {% for evento in eventos %}
+        <li>
+            <div style={% if evento.get_evento_atrasado %} 
+                        "color:red"
+                        {% endif %}>
+                {{ evento.titulo }} - {{ evento.get_data_evento }}
+                <a href="evento/?id={{ evento.id }}">Editar</a>
+                <a href="evento/delete/{{ evento.id }}/">Excluir</a>
+            </div>
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}
